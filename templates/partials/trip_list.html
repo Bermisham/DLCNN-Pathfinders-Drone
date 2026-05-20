@@ -1,0 +1,7 @@
+{% for trip in trips %}
+<button hx-get="/trips/{{ trip.id }}/select"
+        hx-target="#trip-title"
+        hx-swap="innerHTML">
+    Trip #{{ trip.id }}
+</button>
+{% endfor %}

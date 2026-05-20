@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tello Drone Controller</title>
+    <script src="/static/htmx/htmx.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="hz-container">
+        <div class="sidebar"> <!-- Side Bar -->
+            <p>Sidebar</p>
+        </div>
+        <div class="vt-container"> <!-- Trip Content -->
+            <h1 id="trip-title">Select a trip</h1>
+        </div>
+        <div class="vt-container trip-list-container"> <!-- Trip List -->
+            <button hx-post="/trips/new" hx-target="#trip-list" hx-swap="innerHTML" class="new-trip-btn">New Trip</button>
+            <div id="trip-list" hx-get="/trips/list" hx-trigger="load" class="trip-list"> <!-- Trip List -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

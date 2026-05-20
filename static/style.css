@@ -1,0 +1,105 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('assets/Roboto/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('assets/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+}
+
+:root {
+    --bg-colour: oklch(14.1% 0.005 285.823);
+    --surface-colour: oklch(21% 0.006 285.885);
+    --highlight-colour: oklch(27.4% 0.006 286.033);
+    --text-colour: oklch(98.5% 0 0);
+}
+
+html {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--bg-colour);
+    color: var(--text-colour);
+    height: 100%;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+.hz-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.vt-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+
+/* Sidebar */
+.sidebar {
+    background-color: var(--surface-colour);
+    padding: 1rem;
+    width: 5vw;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+/* Trip List */
+.trip-list-container {
+    width: 40vw;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-left: solid var(--highlight-colour) 1px;
+}
+
+.trip-list {
+    padding: 0.5rem;
+    padding-top: 1rem;
+    border-top: solid var(--highlight-colour) 1px;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.trip-list button {
+    background-color: var(--surface-colour);
+    color: var(--text-colour);
+    border: none;
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.trip-list button:hover {
+    background-color: var(--highlight-colour);
+}
+
+.new-trip-btn {
+    background-color: var(--surface-colour);
+    color: var(--text-colour);
+    border: none;
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
