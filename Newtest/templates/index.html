@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Drone Control</title>
+  <style>
+    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    canvas { border: 1px solid #ccc; margin: 20px 0; }
+    .controls { display: grid; grid-template-columns: repeat(3, 60px); gap: 8px; margin-bottom: 20px; }
+    .controls button { padding: 12px; font-size: 18px; }
+    .top-controls { display: flex; gap: 10px; margin-bottom: 10px; }
+    table { border-collapse: collapse; width: 500px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f0f0f0; }
+    #status { margin: 10px 0; color: grey; }
+  </style>
+</head>
+<body>
+  <h2>Drone Control</h2>
+
+  <div class="top-controls">
+    <button onclick="send('takeoff')">Takeoff</button>
+    <button onclick="send('land')">Land</button>
+    <button onclick="send('battery')">Battery</button>
+    <button onclick="send('modeltest')">Model Test</button>
+  </div>
+
+  <p id="status">Ready</p>
+
+  <canvas id="map" width="500" height="500"></canvas>
+
+  <div class="controls">
+    <div></div>
+    <button onclick="sendMove('forward')">▲</button>
+    <div></div>
+    <button onclick="sendMove('left')">◄</button>
+    <button></button>
+    <button onclick="sendMove('right')">►</button>
+    <div></div>
+    <button onclick="sendMove('back')">▼</button>
+    <div></div>
+  </div>
+
+  <h3>Cracks Detected</h3>
+  <table>
+    <thead><tr><th>#</th><th>X</th><th>Y</th><th>Class</th><th>Confidence</th><th>Bounding Box</th><th>Image</th></tr></thead>    <tbody id="crackList"></tbody>
+  </table>
+
+  <script>
+    const canvas = document.getElementById('map');
+    const ctx = canvas.getContext('2d');
+
+    async function send(action) {
+      const res = await fetch('/' + action, { method: 'POST' });
+      const data = await res.json();
+      document.getElementById('status').textContent = data.message;
+    }
+
+    async function sendMove(direction) {
+      await fetch('/move/' + direction, { method: 'POST' });
+      refreshState();
+    }
+
+    async function sendRotate(direction) {
+      await fetch('/rotate/' + direction, { method: 'POST' });
+      refreshState();
+    }
+
+    async function refreshState() {
+      const res = await fetch('/state');
+      const data = await res.json();
+      drawMap(data);
+      updateCrackList(data.cracks);
+    }
+
+    function drawMap(data) {
+      ctx.clearRect(0, 0, 500, 500);
+
+      // Background
+      ctx.fillStyle = '#f9f9f9';
+      ctx.fillRect(0, 0, 500, 500);
+
+      // Path
+      if (data.path.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(data.path[0].x, data.path[0].y);
+        data.path.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.strokeStyle = '#4a90e2';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // Crack markers
+      data.cracks.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, 6, 0, 2 * Math.PI);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+        ctx.fillStyle = 'black';
+        ctx.fillText('#' + c.id, c.x + 8, c.y + 4);
+      });
+
+      // Drone position
+      const p = data.position;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 8, 0, 2 * Math.PI);
+      ctx.fillStyle = '#4a90e2';
+      ctx.fill();
+    }
+
+    function updateCrackList(cracks) {
+      const tbody = document.getElementById('crackList');
+      tbody.innerHTML = '';
+      cracks.forEach(c => {
+        const row = `<tr>
+          <td>${c.id}</td>
+          <td>${Math.round(c.x)}</td>
+          <td>${Math.round(c.y)}</td>
+          <td>${c.box ? c.box.join(', ') : 'N/A'}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+    function updateCrackList(cracks) {
+    const tbody = document.getElementById('crackList');
+    tbody.innerHTML = '';
+    cracks.forEach(c => {
+        const row = `<tr>
+        <td>${c.id}</td>
+        <td>${Math.round(c.x)}</td>
+        <td>${Math.round(c.y)}</td>
+        <td>${c.class}</td>
+        <td>${c.confidence}</td>
+        <td>${c.box ? c.box.map(v => Math.round(v)).join(', ') : 'N/A'}</td>
+        <td><img src="data:image/jpeg;base64,${c.image}" width="150"/></td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+    }
+
+    // Poll state every 2 seconds
+    setInterval(refreshState, 2000);
+    refreshState();
+  </script>
+</body>
+</html>
