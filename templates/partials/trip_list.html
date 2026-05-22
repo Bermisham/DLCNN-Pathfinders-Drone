@@ -1,7 +1,20 @@
 {% for trip in trips %}
 <button hx-get="/trips/{{ trip.id }}/select"
-        hx-target="#trip-title"
+        hx-target="#trip-content"
         hx-swap="innerHTML">
-    Trip #{{ trip.id }}
+    <div class="trip-btn-left">
+        <span class="trip-number">Trip #{{ trip.id }}</span>
+        <span class="trip-drone">{{ trip.drone_id if trip.drone_id else '---' }}</span>
+    </div>
+    <div class="trip-btn-right">
+        <span class="trip-stat">
+            <img src="/static/assets/timer.svg" class="trip-icon" alt="">
+            {{ trip.duration_str }}
+        </span>
+        <span class="trip-stat">
+            <img src="/static/assets/triangle-alert.svg" class="trip-icon" alt="">
+            {{ trip.hazards | length }}
+        </span>
+    </div>
 </button>
 {% endfor %}

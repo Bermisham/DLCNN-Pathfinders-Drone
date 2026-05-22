@@ -10,13 +10,51 @@
 <body>
     <div class="hz-container">
         <div class="sidebar"> <!-- Side Bar -->
-            <p>Sidebar</p>
+            <img src="/static/assets/drone.svg" alt="Drone Logo" class="drone-logo">
+            <div class="wifi-status"> <!-- hx-trigger="load, every 10s" hx-swap="innerHTML">-->
+                <span>Not Connected</span>
+            </div>
+            <div class="drone-stats-card"> <!-- Drone Status -->
+                <img src="/static/assets/connection/wifi.svg" class="stat-icon" style="margin-bottom: 1rem;" alt="Connection">
+                <img src="/static/assets/battery/battery-medium.svg" class="stat-icon" alt="Battery">
+                <span class="stat-label" style="margin-bottom: 1rem;">50%</span>
+                <img src="/static/assets/thermometer.svg" class="stat-icon" alt="Temperature">
+                <span class="stat-label">28°C</span>
+            </div>
+            <button class="settings-btn" onclick="document.getElementById('settings-panel').classList.toggle('open')">
+                <img src="/static/assets/settings.svg" alt="Settings" class="sidebar-icon">
+            </button>
+            <div id="settings-panel" class="settings-panel">
+                <button class="settings-panel-btn danger"
+                        hx-post="/settings/clear"
+                        hx-target="#trip-list"
+                        hx-swap="innerHTML"
+                        hx-confirm="Delete all trips and hazards?"
+                        hx-on::after-request="document.getElementById('settings-panel').classList.remove('open')">
+                    Clear All Data
+                </button>
+                <button class="settings-panel-btn"
+                        hx-post="/settings/dummy-trip"
+                        hx-target="#trip-list"
+                        hx-swap="innerHTML"
+                        hx-on::after-request="document.getElementById('settings-panel').classList.remove('open')">
+                    Generate Dummy Trip
+                </button>
+            </div>
         </div>
-        <div class="vt-container"> <!-- Trip Content -->
-            <h1 id="trip-title">Select a trip</h1>
+
+
+        <div class="vt-container trip-content-container"> <!-- Trip Content -->
+            <div id="trip-content" class="trip-content">
+                <p class="no-trip-selected">Select a trip</p>
+            </div>
         </div>
+        
+        
         <div class="vt-container trip-list-container"> <!-- Trip List -->
-            <button hx-post="/trips/new" hx-target="#trip-list" hx-swap="innerHTML" class="new-trip-btn">New Trip</button>
+            <button hx-get="/recording" hx-target="#trip-content" hx-swap="innerHTML" class="new-trip-btn">
+                <img src="/static/assets/plus.svg" alt="New Trip">
+            </button>
             <div id="trip-list" hx-get="/trips/list" hx-trigger="load" class="trip-list"> <!-- Trip List -->
             </div>
         </div>

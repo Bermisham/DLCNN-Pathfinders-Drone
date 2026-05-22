@@ -1,0 +1,25 @@
+<div class="hazard-detail-info">
+    <div class="hazard-detail-field">
+        <span class="hazard-field-label">Type</span>
+        <span class="hazard-field-value">{{ hazard.type }}</span>
+    </div>
+    <div class="hazard-detail-field">
+        <span class="hazard-field-label">Severity</span>
+        <span class="hazard-field-value">{{ hazard.severity if hazard.severity else '—' }}</span>
+    </div>
+    <div class="hazard-detail-field">
+        <span class="hazard-field-label">Detected At</span>
+        <span class="hazard-field-value">{{ hazard.detected_at.strftime('%d %b %Y, %H:%M:%S') }}</span>
+    </div>
+    <div class="hazard-detail-field">
+        <span class="hazard-field-label">Latitude</span>
+        <span class="hazard-field-value">{{ "%.6f" | format(hazard.lat) }}</span>
+    </div>
+    <div class="hazard-detail-field">
+        <span class="hazard-field-label">Longitude</span>
+        <span class="hazard-field-value">{{ "%.6f" | format(hazard.lng) }}</span>
+    </div>
+</div>
+<div class="hazard-detail-image">
+    <div class="hazard-img-placeholder">img</div>
+</div>

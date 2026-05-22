@@ -12,6 +12,15 @@ class Trip(db.Model):
 
     hazards    = db.relationship('Hazard', backref='trip', lazy=True)
 
+    @property
+    def duration_str(self):
+        if self.ended_at is None:
+            return '--:--'
+        total = int((self.ended_at - self.started_at).total_seconds())
+        h, rem = divmod(total, 3600)
+        m, s = divmod(rem, 60)
+        return f'{h:02d}:{m:02d}:{s:02d}'
+
 
 class Hazard(db.Model):
     __tablename__ = 'hazards'

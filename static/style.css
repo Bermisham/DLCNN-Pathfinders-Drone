@@ -24,6 +24,7 @@ html {
     padding: 0px;
     margin: 0px;
     font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
 }
 
 body {
@@ -53,24 +54,330 @@ body {
 /* Sidebar */
 .sidebar {
     background-color: var(--surface-colour);
+    width: 8vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    position: relative;
+}
+
+.settings-panel {
+    display: none;
+    position: absolute;
+    bottom: 3.5rem;
+    left: calc(100% + 0.5rem);
+    background-color: var(--surface-colour);
+    border: solid var(--highlight-colour) 1px;
+    border-radius: 0.75rem;
+    padding: 0.4rem;
+    flex-direction: column;
+    gap: 0.3rem;
+    z-index: 100;
+    min-width: 11rem;
+}
+
+.settings-panel.open {
+    display: flex;
+}
+
+.settings-panel-btn {
+    background: none;
+    color: var(--text-colour);
+    border: none;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'Roboto', sans-serif;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.settings-panel-btn:hover {
+    background-color: var(--highlight-colour);
+}
+
+.settings-panel-btn.danger {
+    color: oklch(75% 0.15 25);
+}
+
+.settings-panel-btn.danger:hover {
+    background-color: oklch(30% 0.08 25);
+}
+
+.drone-logo {
+    width: 3vw;
+    height: auto;
+}
+
+.wifi-status {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.drone-stats-card {
+    width: 4vw;
+    margin-top: 2rem;
+    background-color: var(--highlight-colour);
+    border-radius: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+    filter: brightness(0) invert(1);
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    opacity: 0.7;
+}
+
+.settings-btn {
+    margin-top: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-btn:hover {
+    background-color: var(--highlight-colour);
+}
+
+.sidebar-icon {
+    width: 2rem;
+    height: 2rem;
+    filter: brightness(0) invert(1);
+}
+
+/* Trip Content */
+.trip-content-container {
+    flex: 1;
+    overflow: hidden;
+}
+
+.trip-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.no-trip-selected {
+    margin: auto;
+    opacity: 0.4;
+    font-size: 0.9rem;
+}
+
+.trip-title-bar {
+    background-color: var(--surface-colour);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+}
+
+.trip-info-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+}
+
+.trip-title-number {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.trip-title-drone {
+    font-size: 0.7rem;
+    opacity: 0.6;
+}
+
+.trip-info-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.trip-video-region {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 1rem;
-    width: 5vw;
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    overflow: hidden;
+}
+
+.trip-video {
+    height: 100%;
+    max-width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    background-color: var(--surface-colour);
+}
+
+.record-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.35rem;
+    border-radius: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.record-btn:hover {
+    background-color: var(--highlight-colour);
+}
+
+.record-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    filter: brightness(0) invert(1);
+}
+
+.live-feed {
+    height: 100%;
+    max-width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: var(--surface-colour);
+    border-radius: 0.5rem;
+}
+
+.trip-hazard-section {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    border-top: solid var(--surface-colour) 4px;
+    overflow: hidden;
+}
+
+.hazard-detail {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.no-hazard-selected,
+.no-hazards {
+    margin: auto;
+    opacity: 0.4;
+    font-size: 0.9rem;
+}
+
+.hazard-detail-info {
+    width: 40%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    border-right: solid var(--surface-colour) 4px;
+    overflow-y: auto;
+}
+
+.hazard-detail-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.hazard-field-label {
+    font-size: 0.6rem;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.hazard-field-value {
+    font-size: 0.85rem;
+}
+
+.hazard-detail-image {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+}
+
+.hazard-img-placeholder {
+    aspect-ratio: 4 / 3;
+    max-height: 100%;
+    max-width: 100%;
+    background-color: var(--highlight-colour);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    font-size: 0.85rem;
+}
+
+.hazard-list {
+    width: 14rem;
+    border-left: solid var(--surface-colour) 4px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.hazard-btn {
+    background-color: var(--bg-colour);
+    color: var(--text-colour);
+    border: none;
+    border-bottom: solid var(--surface-colour) 4px;
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    text-align: left;
+}
+
+.hazard-btn:hover {
+    background-color: var(--highlight-colour);
+}
+
+.hazard-type {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.hazard-severity {
+    font-size: 0.65rem;
+    opacity: 0.6;
 }
 
 /* Trip List */
 .trip-list-container {
-    width: 40vw;
+    width: 30vw;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    border-left: solid var(--highlight-colour) 1px;
+    border-left: solid var(--surface-colour) 4px;
 }
 
 .trip-list {
     padding: 0.5rem;
-    padding-top: 1rem;
-    border-top: solid var(--highlight-colour) 1px;
+    padding-top: 0.5rem;
     height: 100%;
     max-height: 100%;
     overflow-y: auto;
@@ -81,25 +388,73 @@ body {
     color: var(--text-colour);
     border: none;
     width: 100%;
-    padding: 0.5rem;
+    height: 3rem;
+    padding: 0.5rem 0.75rem;
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .trip-list button:hover {
     background-color: var(--highlight-colour);
 }
 
+.trip-btn-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+}
+
+.trip-number {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.trip-drone {
+    font-size: 0.65rem;
+    opacity: 0.6;
+}
+
+.trip-btn-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.trip-stat {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    opacity: 0.85;
+}
+
+.trip-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    filter: brightness(0) invert(1);
+}
+
 .new-trip-btn {
     background-color: var(--surface-colour);
     color: var(--text-colour);
+    font-size: 1.25rem;
     border: none;
     width: 100%;
+    height: 3rem;
     padding: 0.5rem;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     border-radius: 0.5rem;
     cursor: pointer;
 }
 
+.new-trip-btn:hover {
+    background-color: var(--highlight-colour);
+}

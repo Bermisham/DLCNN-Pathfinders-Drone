@@ -1,0 +1,39 @@
+<div class="trip-title-bar">
+    <div class="trip-info-left">
+        <span class="trip-title-number">Trip #{{ trip.id }}</span>
+        <span class="trip-title-drone">{{ trip.drone_id if trip.drone_id else '---' }}</span>
+    </div>
+    <div class="trip-info-right">
+        <span class="trip-stat">
+            <img src="/static/assets/timer.svg" class="trip-icon" alt="">
+            {{ trip.duration_str }}
+        </span>
+        <span class="trip-stat">
+            <img src="/static/assets/triangle-alert.svg" class="trip-icon" alt="">
+            {{ trip.hazards | length }}
+        </span>
+    </div>
+</div>
+
+<div class="trip-video-region">
+    <video class="trip-video" controls></video>
+</div>
+
+<div class="trip-hazard-section">
+    <div class="hazard-detail" id="hazard-detail">
+        <p class="no-hazard-selected">Select a hazard</p>
+    </div>
+    <div class="hazard-list">
+        {% for hazard in trip.hazards %}
+        <button class="hazard-btn"
+                hx-get="/hazards/{{ hazard.id }}"
+                hx-target="#hazard-detail"
+                hx-swap="innerHTML">
+            <span class="hazard-type">{{ hazard.type }}</span>
+            <span class="hazard-severity">{{ hazard.severity if hazard.severity else '---' }}</span>
+        </button>
+        {% else %}
+        <p class="no-hazards">No hazards recorded</p>
+        {% endfor %}
+    </div>
+</div>
