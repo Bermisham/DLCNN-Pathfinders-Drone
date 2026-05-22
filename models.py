@@ -5,7 +5,7 @@ class Trip(db.Model):
     __tablename__ = 'trips'
 
     id         = db.Column(db.Integer, primary_key=True)
-    started_at = db.Column(db.DateTime, default=datetime.utcnow)
+    started_at = db.Column(db.DateTime, default=datetime.now())
     ended_at   = db.Column(db.DateTime, nullable=True)
     drone_id   = db.Column(db.String, nullable=True)
     notes      = db.Column(db.Text, nullable=True)
@@ -21,6 +21,6 @@ class Hazard(db.Model):
     image_path  = db.Column(db.String, nullable=True)
     lat         = db.Column(db.Float, nullable=False)
     lng         = db.Column(db.Float, nullable=False)
-    detected_at = db.Column(db.DateTime, default=datetime.utcnow)
+    detected_at = db.Column(db.DateTime, default=datetime.now())
     type        = db.Column(db.String, nullable=False)
     severity    = db.Column(db.String, nullable=True)

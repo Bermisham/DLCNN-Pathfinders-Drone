@@ -8,10 +8,10 @@ drone.streamon()
 bat = drone.get_battery()
 print(bat)
 
-drone.takeoff()
-print("Moving Down")
-drone.move_down(40)
-print("Moved Down")
+#drone.takeoff()
+#print("Moving Down")
+#drone.move_down(40)
+#print("Moved Down")
 
 while True:
     frame = drone.get_frame_read().frame
@@ -20,6 +20,6 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-drone.land()
+#drone.land()
 drone.streamoff()
 cv2.destroyAllWindows()
