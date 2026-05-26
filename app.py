@@ -27,18 +27,28 @@ def index():
 
 @app.route('/drone/connection', methods=['GET'])
 def connection():
-    return ('', 204)
     global drone_obj
+
+    # Check for drone connection
     if drone_obj is None:
         drone_obj = drone.connect_drone()
         if drone_obj is None:
+            print("Drone Connection Failed")
             return ('', 204)
     else:
         if not drone.check_drone_connection(drone_obj):
+            print("Drone Disconnected")
             drone_obj = None
             return ('', 204)
-    return ('', 204)
+        
+    # Fetch drone stats    
+    battery = int(drone.get_drone_battery(drone_obj))
+    snr = drone.get_drone_SNR(drone_obj)
+    temp = drone.get_drone_temp(drone_obj)
 
+    return render_template('partials/drone_status.html', drone_battery=battery, drone_snr=snr, drone_temperature=temp)
+
+# --- Trip Routes ---
 def _trip_list_partial():
     trips = Trip.query.order_by(Trip.started_at.desc()).all()
     return render_template('partials/trip_list.html', trips=trips)
@@ -52,14 +62,6 @@ def trip_list():
 @app.route('/recording', methods=['GET'])
 def recording():
     return render_template('partials/new_trip.html')
-
-
-@app.route('/trips/new', methods=['POST'])
-def new_trip():
-    trip = Trip()
-    db.session.add(trip)
-    db.session.commit()
-    return _trip_list_partial()
 
 
 @app.route('/trips/<int:trip_id>/select', methods=['GET'])
@@ -77,13 +79,13 @@ def get_hazards(trip_id):
     hazards = Hazard.query.filter_by(trip_id=trip_id).all()
     return {'hazards': [{'id': h.id, 'type': h.type, 'lat': h.lat, 'lng': h.lng} for h in hazards]}
 
-
+# --- Hazard Detail Route ---
 @app.route('/hazards/<int:hazard_id>', methods=['GET'])
 def hazard_detail(hazard_id):
     hazard = Hazard.query.get_or_404(hazard_id)
     return render_template('partials/hazard_detail.html', hazard=hazard)
 
-
+# --- Settings Routes ---
 @app.route('/settings/clear', methods=['POST'])
 def settings_clear():
     db.drop_all()
@@ -117,6 +119,15 @@ def settings_dummy_trip():
     db.session.commit()
     return _trip_list_partial()
 
+# --- New Trip Route ---
+@app.route('/trips/start', methods=['POST'])
+def start_trip():
+    drone_id = drone.get_drone_serial_number(drone_obj)
+    started_at = datetime.now()
+
+    drone.drone_start(drone_obj)
+
+    return ""
 
 if __name__ == '__main__':
     app.run(debug=True)

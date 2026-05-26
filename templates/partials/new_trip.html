@@ -4,7 +4,10 @@
     </div>
     <div class="trip-info-right">
         <button class="record-btn">
-            <img src="/static/assets/play.svg" class="record-icon" alt="Start">
+            <img src="/static/assets/play.svg"
+                 hx-post="/trips/start"
+                 class="record-icon" 
+                 alt="Start">
         </button>
         <button class="record-btn">
             <img src="/static/assets/square.svg" class="record-icon" alt="Stop">

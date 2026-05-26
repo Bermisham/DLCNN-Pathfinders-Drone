@@ -1,0 +1,33 @@
+<div class="sidebar"> <!-- Side Bar -->
+    <img src="/static/assets/drone.svg" alt="Drone Logo" class="drone-logo">
+    <div class="wifi-status"> <!-- Connection Status -->
+        <span>Not Connected</span>
+    </div>
+    <div class="drone-stats-card"> <!-- Drone Status -->
+        <img src="/static/assets/connection/wifi.svg" class="stat-icon" style="margin-bottom: 1rem;" alt="Connection">
+        <img src="/static/assets/battery/battery-medium.svg" class="stat-icon" alt="Battery">
+        <span class="stat-label" style="margin-bottom: 1rem;">{{ drone_battery }}%</span>
+        <img src="/static/assets/thermometer.svg" class="stat-icon" alt="Temperature">
+        <span class="stat-label">{{ drone_temperature }}°C</span>
+    </div>
+    <button class="settings-btn" onclick="document.getElementById('settings-panel').classList.toggle('open')">
+        <img src="/static/assets/settings.svg" alt="Settings" class="sidebar-icon">
+    </button>
+    <div id="settings-panel" class="settings-panel">
+        <button class="settings-panel-btn danger"
+                hx-post="/settings/clear"
+                hx-target="#trip-list"
+                hx-swap="innerHTML"
+                hx-confirm="Delete all trips and hazards?"
+                hx-on::after-request="document.getElementById('settings-panel').classList.remove('open')">
+            Clear All Data
+        </button>
+        <button class="settings-panel-btn"
+                hx-post="/settings/dummy-trip"
+                hx-target="#trip-list"
+                hx-swap="innerHTML"
+                hx-on::after-request="document.getElementById('settings-panel').classList.remove('open')">
+            Generate Dummy Trip
+        </button>
+    </div>
+</div>
