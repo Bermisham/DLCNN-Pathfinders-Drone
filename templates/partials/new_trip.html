@@ -9,14 +9,19 @@
                  class="record-icon" 
                  alt="Start">
         </button>
-        <button class="record-btn">
+        <button class="record-btn"
+                hx-post="/trips/stop"
+                hx-target="#trip-list"
+                hx-swap="innerHTML">
             <img src="/static/assets/square.svg" class="record-icon" alt="Stop">
         </button>
     </div>
 </div>
 
 <div class="trip-video-region">
-    <div class="live-feed"></div>
+    <div class="live-feed">
+        <img src="/drone/feed" style="width: 100%; height: auto;" alt="Live Feed">
+    </div>
 </div>
 
 <div class="trip-hazard-section">

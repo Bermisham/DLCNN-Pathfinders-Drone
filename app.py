@@ -1,6 +1,6 @@
 import random
 from datetime import datetime, timedelta
-from flask import Flask, render_template
+from flask import Flask, render_template, Response
 from database import db
 from models import Trip, Hazard
 import drone
@@ -14,6 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 drone_obj = None
+is_running = False
 
 # Create tables if they don't exist yet
 with app.app_context():
@@ -28,6 +29,10 @@ def index():
 @app.route('/drone/connection', methods=['GET'])
 def connection():
     global drone_obj
+    global is_running
+
+    if is_running:
+        return ""
 
     # Check for drone connection
     if drone_obj is None:
@@ -119,15 +124,43 @@ def settings_dummy_trip():
     db.session.commit()
     return _trip_list_partial()
 
-# --- New Trip Route ---
+# --- Trip Recording Routes ---
+@app.route('/drone/feed')
+def drone_feed():
+    return Response(drone.generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 @app.route('/trips/start', methods=['POST'])
 def start_trip():
+    global drone_obj, is_running
+    if is_running or drone_obj is None:
+        return ('', 204)
+
     drone_id = drone.get_drone_serial_number(drone_obj)
-    started_at = datetime.now()
+    trip = Trip(drone_id=drone_id, started_at=datetime.now())
+    db.session.add(trip)
+    db.session.commit()
 
-    drone.drone_start(drone_obj)
+    is_running = True
+    drone.start_stream(drone_obj)
+    return ('', 204)
 
-    return ""
+
+@app.route('/trips/stop', methods=['POST'])
+def stop_trip():
+    global drone_obj, is_running
+    if not is_running:
+        return ('', 204)
+
+    drone.stop_stream(drone_obj)
+    is_running = False
+
+    open_trip = Trip.query.filter_by(ended_at=None).order_by(Trip.started_at.desc()).first()
+    if open_trip:
+        open_trip.ended_at = datetime.now()
+        db.session.commit()
+
+    return _trip_list_partial()
 
 if __name__ == '__main__':
     app.run(debug=True)
