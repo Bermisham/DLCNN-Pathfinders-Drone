@@ -1,14 +1,38 @@
+{% set _status  = drone_connection_status | default("Not Connected") %}
+{% set _snr     = drone_snr | default(none) %}
+{% set _battery = drone_battery | default(none) %}
+
+{% if _status == "Not Connected" or _snr is none %}
+    {% set wifi_svg = "wifi-off.svg" %}
+{% elif _snr | int >= 70 %}
+    {% set wifi_svg = "wifi.svg" %}
+{% elif _snr | int >= 40 %}
+    {% set wifi_svg = "wifi-high.svg" %}
+{% else %}
+    {% set wifi_svg = "wifi-low.svg" %}
+{% endif %}
+
+{% if _status == "Not Connected" or _battery is none %}
+    {% set battery_svg = "battery-warning.svg" %}
+{% elif _battery >= 75 %}
+    {% set battery_svg = "battery-full.svg" %}
+{% elif _battery >= 40 %}
+    {% set battery_svg = "battery-medium.svg" %}
+{% else %}
+    {% set battery_svg = "battery-low.svg" %}
+{% endif %}
+
 <div class="sidebar"> <!-- Side Bar -->
     <img src="/static/assets/drone.svg" alt="Drone Logo" class="drone-logo">
     <div class="wifi-status"> <!-- Connection Status -->
-        <span>Not Connected</span>
+        <span>{{ _status }}</span>
     </div>
     <div class="drone-stats-card"> <!-- Drone Status -->
-        <img src="/static/assets/connection/wifi.svg" class="stat-icon" style="margin-bottom: 1rem;" alt="Connection">
-        <img src="/static/assets/battery/battery-medium.svg" class="stat-icon" alt="Battery">
-        <span class="stat-label" style="margin-bottom: 1rem;">{{ drone_battery }}%</span>
+        <img src="/static/assets/connection/{{ wifi_svg }}" class="stat-icon" style="margin-bottom: 1rem;" alt="Connection">
+        <img src="/static/assets/battery/{{ battery_svg }}" class="stat-icon" alt="Battery">
+        <span class="stat-label" style="margin-bottom: 1rem;">{{ _battery if _battery is not none else '--' }}%</span>
         <img src="/static/assets/thermometer.svg" class="stat-icon" alt="Temperature">
-        <span class="stat-label">{{ drone_temperature }}°C</span>
+        <span class="stat-label">{{ drone_temperature | default('--') }}°C</span>
     </div>
     <button class="settings-btn" onclick="document.getElementById('settings-panel').classList.toggle('open')">
         <img src="/static/assets/settings.svg" alt="Settings" class="sidebar-icon">

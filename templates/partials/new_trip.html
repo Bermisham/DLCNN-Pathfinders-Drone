@@ -3,13 +3,13 @@
         <span class="trip-title-number">New Trip</span>
     </div>
     <div class="trip-info-right">
-        <button class="record-btn">
-            <img src="/static/assets/play.svg"
-                 hx-post="/trips/start"
-                 class="record-icon" 
-                 alt="Start">
+        <button type="button" class="record-btn"
+                hx-post="/trips/start"
+                hx-include="#waypoint-form"
+                hx-swap="none">
+            <img src="/static/assets/play.svg" class="record-icon" alt="Start">
         </button>
-        <button class="record-btn"
+        <button type="button" class="record-btn"
                 hx-post="/trips/stop"
                 hx-target="#trip-list"
                 hx-swap="innerHTML">
@@ -18,10 +18,20 @@
     </div>
 </div>
 
-<div class="trip-video-region">
-    <div class="live-feed">
-        <img src="/drone/feed" style="width: 100%; height: auto;" alt="Live Feed">
+<div class="trip-main-region">
+    <div class="trip-video-region">
+        <img src="/drone/feed" class="live-feed" alt="Live Feed">
     </div>
+
+    <form id="waypoint-form" class="waypoint-panel">
+        <p class="waypoint-panel-title">Waypoints</p>
+        <div class="waypoint-list" id="waypoint-list">
+            <!-- Rows injected by addWaypoint() -->
+        </div>
+        <button type="button" class="waypoint-add-btn" onclick="addWaypoint()">
+            + Add Waypoint
+        </button>
+    </form>
 </div>
 
 <div class="trip-hazard-section">
@@ -32,3 +42,25 @@
         <p class="no-hazards">No hazards recorded</p>
     </div>
 </div>
+
+<script>
+function addWaypoint() {
+    const list = document.getElementById('waypoint-list');
+    const row  = document.createElement('div');
+    row.className = 'waypoint-row';
+    row.innerHTML = `
+        <select name="direction" class="waypoint-select">
+            <option value="forward">Forward</option>
+            <option value="back">Back</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+        </select>
+        <input type="number" name="distance" class="waypoint-distance"
+               min="20" max="500" value="100">
+        <span class="waypoint-unit">cm</span>
+        <button type="button" class="waypoint-remove-btn"
+                onclick="this.closest('.waypoint-row').remove()">✕</button>
+    `;
+    list.appendChild(row);
+}
+</script>

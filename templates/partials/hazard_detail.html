@@ -4,22 +4,28 @@
         <span class="hazard-field-value">{{ hazard.type }}</span>
     </div>
     <div class="hazard-detail-field">
-        <span class="hazard-field-label">Severity</span>
-        <span class="hazard-field-value">{{ hazard.severity if hazard.severity else '—' }}</span>
+        <span class="hazard-field-label">Confidence</span>
+        <span class="hazard-field-value">{{ "%.0f%%" | format(hazard.confidence * 100) }}</span>
     </div>
     <div class="hazard-detail-field">
         <span class="hazard-field-label">Detected At</span>
         <span class="hazard-field-value">{{ hazard.detected_at.strftime('%d %b %Y, %H:%M:%S') }}</span>
     </div>
     <div class="hazard-detail-field">
-        <span class="hazard-field-label">Latitude</span>
-        <span class="hazard-field-value">{{ "%.6f" | format(hazard.lat) }}</span>
+        <span class="hazard-field-label">Position X</span>
+        <span class="hazard-field-value">{{ hazard.x }} cm</span>
     </div>
     <div class="hazard-detail-field">
-        <span class="hazard-field-label">Longitude</span>
-        <span class="hazard-field-value">{{ "%.6f" | format(hazard.lng) }}</span>
+        <span class="hazard-field-label">Position Y</span>
+        <span class="hazard-field-value">{{ hazard.y }} cm</span>
     </div>
 </div>
 <div class="hazard-detail-image">
-    <div class="hazard-img-placeholder">img</div>
+    {% if hazard.image_path %}
+    <img src="/hazards/{{ hazard.id }}/image"
+         style="max-height:100%; max-width:100%; border-radius:0.5rem; object-fit:contain;"
+         alt="Hazard image">
+    {% else %}
+    <div class="hazard-img-placeholder">No image</div>
+    {% endif %}
 </div>

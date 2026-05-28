@@ -30,7 +30,7 @@
                 hx-target="#hazard-detail"
                 hx-swap="innerHTML">
             <span class="hazard-type">{{ hazard.type }}</span>
-            <span class="hazard-severity">{{ hazard.severity if hazard.severity else '---' }}</span>
+            <span class="hazard-severity">{{ "%.0f%%" | format(hazard.confidence * 100) }}</span>
         </button>
         {% else %}
         <p class="no-hazards">No hazards recorded</p>
